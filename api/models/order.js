@@ -1,13 +1,10 @@
 const mongoose = require('mongoose');
 
-//Order Schema
+//ID schema
 const orderSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    //All ids for a order are same design
-    idcard: { type: mongoose.Schema.Types.ObjectId, ref: 'Idcard', required: true },
-    customerName: { type: String, required: true },
-    count: { type: Number, required: true },
-    status: { type: String, default: "PENDING" }
+    orderItem: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Idcard', required: true }],
+    organizationName: { type: String, default: 'NA' }
 });
 
 module.exports = mongoose.model('Order', orderSchema);

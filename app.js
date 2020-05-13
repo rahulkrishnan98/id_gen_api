@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 });
 //My Routes
 app.use('/idcards', idcardRoutes);
-// app.use('/orders', orderRoutes);
+app.use('/orders', orderRoutes);
 
 //Error Handling
 app.use((req, res, next) => {
