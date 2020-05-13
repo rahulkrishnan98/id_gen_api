@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 //Schemas
 const idcardRoutes = require("./api/routes/idcards");
 const orderRoutes = require("./api/routes/orders");
+const userRoutes = require("./api/routes/user");
 
 //DB 
 mongoose.connect(
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
 //My Routes
 app.use('/idcards', idcardRoutes);
 app.use('/orders', orderRoutes);
+app.use('/user', userRoutes);
 
 //Error Handling
 app.use((req, res, next) => {
