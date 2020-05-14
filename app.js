@@ -20,6 +20,7 @@ mongoose.connect(
 );
 
 mongoose.Promise = global.Promise;
+
 //Middle-ware
 app.use(morgan("dev")); //Logging
 app.use(bodyParser.urlencoded({ extended: false }));

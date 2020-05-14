@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Idcard = require('../models/idcard');
 const mongoose = require('mongoose');
-
+const checkAuth = require('../middleware/authenticate');
 // All idCards information - Including count etc
 // exec makes it a true promise, in case of save, its 
 // Behaviour is promise by default.
 
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Idcard.find().select("_id fieldName").exec().then(docs => {
         const response = {
             id_count: docs.length,
@@ -31,7 +31,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
     const idcard = new Idcard({
         _id: new mongoose.Types.ObjectId(),
         designFile: req.body.designFile,
@@ -58,7 +58,7 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', checkAuth, (req, res, next) => {
     const id = req.params.id;
     Idcard.findById(id)
         .select('_id fieldName')
@@ -84,7 +84,7 @@ router.get('/:id', (req, res, next) => {
         });
 });
 
-router.patch('/:cardId', (req, res, next) => {
+router.patch('/:cardId', checkAuth, (req, res, next) => {
     const id = req.params.cardId;
     const updateOps = {};
 
@@ -112,7 +112,7 @@ router.patch('/:cardId', (req, res, next) => {
         });
 });
 
-router.delete('/:cardId', (req, res, next) => {
+router.delete('/:cardId', checkAuth, (req, res, next) => {
     const id = req.params.cardId;
     Idcard.remove({ _id: id })
         .exec()

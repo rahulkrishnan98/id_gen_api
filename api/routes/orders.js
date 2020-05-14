@@ -3,10 +3,10 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Order = require("../models/order");
 const Idcard = require("../models/idcard");
-
+const checkAuth = require('../middleware/authenticate');
 
 //Handling incoming requests
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Order.find().select("_id organizationName").exec().then(docs => {
         const response = {
             order_count: docs.length,
@@ -31,7 +31,7 @@ router.get('/', (req, res, next) => {
 });
 
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
     const promisedMap = new Promise(function (resolve, reject) {
         var idArray = [];
         req.body.orderItem.map(async product => {
@@ -83,7 +83,7 @@ router.post('/', (req, res, next) => {
 
 });
 
-router.delete('/:orderId', (req, res, next) => {
+router.delete('/:orderId', checkAuth, (req, res, next) => {
     const id = req.params.orderId;
     Idcard.remove({ _id: id })
         .exec()
