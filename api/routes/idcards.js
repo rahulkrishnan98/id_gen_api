@@ -3,18 +3,20 @@ const router = express.Router();
 const Idcard = require('../models/idcard');
 const mongoose = require('mongoose');
 const checkAuth = require('../middleware/authenticate');
+
 // All idCards information - Including count etc
 // exec makes it a true promise, in case of save, its 
 // Behaviour is promise by default.
 
 router.get('/', checkAuth, (req, res, next) => {
-    Idcard.find().select("_id fieldName").exec().then(docs => {
+    Idcard.find().select("_id status data").exec().then(docs => {
         const response = {
             id_count: docs.length,
             idcards: docs.map(doc => {
                 return {
                     _id: doc._id,
-                    fieldName: doc.fieldName,
+                    status: doc.status,
+                    data: doc.data,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/idcards/' + doc._id
@@ -34,8 +36,8 @@ router.get('/', checkAuth, (req, res, next) => {
 router.post('/', checkAuth, (req, res, next) => {
     const idcard = new Idcard({
         _id: new mongoose.Types.ObjectId(),
-        designFile: req.body.designFile,
-        fieldName: req.body.fieldName
+        data: req.body.data,
+        status: req.body.status
     });
     idcard.save().then(result => {
         console.log(result);
@@ -43,7 +45,8 @@ router.post('/', checkAuth, (req, res, next) => {
             message: "Created ID card",
             createdID: {
                 _id: result._id,
-                fieldName: result.fieldName,
+                data: result.data,
+                status: result.status,
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/idcards/' + result._id
@@ -61,13 +64,15 @@ router.post('/', checkAuth, (req, res, next) => {
 router.get('/:id', checkAuth, (req, res, next) => {
     const id = req.params.id;
     Idcard.findById(id)
-        .select('_id fieldName')
+        .select('_id data status')
         .exec()
         .then(doc => {
             console.log("Fetching from Database", doc);
             if (doc) {
                 res.status(200).json({
-                    idcard: doc,
+                    id: doc._id,
+                    data: doc.data,
+                    status: doc.status,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/idcards/' + doc._id

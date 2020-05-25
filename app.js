@@ -23,6 +23,7 @@ mongoose.Promise = global.Promise;
 
 //Middle-ware
 app.use(morgan("dev")); //Logging
+app.use('/uploads/', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); //Makes JSON data readable
 
